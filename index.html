@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="タイプ相性">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>ポケモン タイプ相性表</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card: #1a1a2e;
+    --border: #2a2a4a;
+    --text: #e8e8f0;
+    --sub: #8888aa;
+    --great: #22dd88;
+    --good: #88dd22;
+    --neutral: #888899;
+    --bad: #dd6622;
+    --immune: #443355;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 12px 12px 80px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: .05em;
+    margin-bottom: 4px;
+    background: linear-gradient(90deg, #f8d800, #ff6b35, #ff0080);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: .75rem;
+    color: var(--sub);
+    margin-bottom: 20px;
+  }
+
+  /* ─── Bottom nav ─── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(15,15,26,.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 4px 8px;
+    background: transparent;
+    border: none;
+    color: var(--sub);
+    font-family: inherit;
+    font-size: .6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color .2s;
+    min-height: 56px;
+  }
+  .nav-btn .nav-icon { font-size: 1.3rem; line-height: 1; }
+  .nav-btn.active { color: #f8d800; }
+  .nav-btn.active .nav-icon { filter: drop-shadow(0 0 6px rgba(248,216,0,.5)); }
+
+  /* ─── Mode pill ─── */
+  .mode-pill {
+    display: flex;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3px;
+    margin-bottom: 16px;
+    gap: 3px;
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 9px 4px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--sub);
+    font-family: inherit;
+    font-size: .78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+  }
+  .mode-btn.active {
+    background: rgba(248,216,0,.15);
+    color: #f8d800;
+  }
+
+  /* ─── Type grid selector ─── */
+  .section-label {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--sub);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+    margin-bottom: 16px;
+  }
+
+  .type-btn {
+    padding: 7px 4px 6px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    font-family: inherit;
+    font-size: .6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s;
+    opacity: .8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    width: 100%;
+    min-height: 56px;
+    justify-content: center;
+  }
+  .type-btn.selected {
+    opacity: 1;
+    border-color: white;
+    transform: scale(1.06);
+    box-shadow: 0 0 10px rgba(255,255,255,.3);
+  }
+  .type-btn svg {
+    width: 24px; height: 24px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+  }
+  .result-type-chip svg {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,.35));
+  }
+  .result-type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ─── Results ─── */
+  .results {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .result-title {
+    font-size: .85rem;
+    font-weight: 900;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .result-group {
+    margin-bottom: 14px;
+  }
+
+  .result-group-label {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .label-great  { background: rgba(34,221,136,.15); color: var(--great); }
+  .label-good   { background: rgba(136,221,34,.15);  color: var(--good); }
+  .label-bad    { background: rgba(221,102,34,.15);  color: var(--bad); }
+  .label-immune { background: rgba(68,51,85,.5);     color: #aa88cc; }
+
+  .result-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .result-type-chip {
+    padding: 4px 9px 4px 6px;
+    border-radius: 10px;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+
+  .no-result {
+    color: var(--sub);
+    font-size: .82rem;
+    font-style: italic;
+  }
+
+  /* ─── Full chart ─── */
+  .chart-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chart-hint {
+    font-size: .7rem;
+    color: var(--sub);
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  table {
+    border-collapse: collapse;
+    font-size: .6rem;
+    min-width: 600px;
+  }
+
+  th, td {
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  th {
+    font-weight: 700;
+    color: var(--sub);
+  }
+
+  .corner { width: 60px; text-align: right; padding-right: 4px; font-size: .6rem; color: var(--sub); }
+
+  td.eff-2  { background: #22dd88; color: #000; font-weight: 900; }
+  td.eff-05 { background: #dd6622; color: #fff; font-weight: 700; }
+  td.eff-0  { background: #221133; color: #aa88cc; font-weight: 700; }
+  td.eff-1  { background: #1e1e30; color: #444466; }
+
+  .atk-label {
+    writing-mode: horizontal-tb;
+    font-size: .58rem;
+    font-weight: 700;
+    max-width: 28px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .7rem;
+    color: var(--sub);
+  }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 3px;
+    font-size: .6rem; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ─── Type colors ─── */
+  .c-ノーマル   { background:#a8a878; }
+  .c-ほのお     { background:#f08030; }
+  .c-みず       { background:#6890f0; }
+  .c-でんき     { background:#f8d030; color:#333; }
+  .c-くさ       { background:#78c850; }
+  .c-こおり     { background:#98d8d8; color:#333; }
+  .c-かくとう   { background:#c03028; }
+  .c-どく       { background:#a040a0; }
+  .c-じめん     { background:#e0c068; color:#333; }
+  .c-ひこう     { background:#a890f0; }
+  .c-エスパー   { background:#f85888; }
+  .c-むし       { background:#a8b820; }
+  .c-いわ       { background:#b8a038; }
+  .c-ゴースト   { background:#705898; }
+  .c-ドラゴン   { background:#7038f8; }
+  .c-あく       { background:#705848; }
+  .c-はがね     { background:#b8b8d0; color:#333; }
+  .c-フェアリー { background:#ee99ac; color:#333; }
+
+  #view-checker { display: block; }
+  #view-chart   { display: none; }
+  #view-rocket  { display: none; }
+
+  /* ─── Rocket view ─── */
+  .rocket-header {
+    font-size: .7rem;
+    color: var(--sub);
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .rocket-header strong { color: #ff4444; }
+
+  .leader-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .leader-tab {
+    padding: 10px 4px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--sub);
+    font-family: inherit;
+    font-size: .72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+    min-height: 44px;
+  }
+  .leader-tab.active { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,.08); }
+
+  .leader-panel { display: none; }
+  .leader-panel.active { display: block; }
+
+  .pokemon-slot {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .slot-header {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--sub);
+    margin-bottom: 8px;
+  }
+  .slot-header span { color: #ff8844; }
+
+  .pokemon-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+  .poke-chip {
+    padding: 4px 10px 4px 8px;
+    border-radius: 10px;
+    font-size: .78rem;
+    font-weight: 700;
+    background: var(--border);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .poke-type-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .poke-sep { color: var(--sub); font-size: .7rem; }
+
+  .counter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 6px;
+  }
+  .counter-label {
+    font-size: .65rem;
+    color: var(--great);
+    font-weight: 700;
+    letter-spacing: .05em;
+    width: 100%;
+    margin-bottom: 2px;
+  }
+  .counter-chip {
+    padding: 3px 9px;
+    border-radius: 8px;
+    font-size: .73rem;
+    font-weight: 700;
+    background: rgba(34,221,136,.15);
+    color: var(--great);
+    border: 1px solid rgba(34,221,136,.3);
+  }
+
+  .update-note {
+    font-size: .65rem;
+    color: var(--sub);
+    text-align: center;
+    margin-top: 14px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h1>⚔️ タイプ相性チェッカー</h1>
+<p class="subtitle">ポケモンGO 全18タイプ対応</p>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-checker" onclick="switchView('checker')">
+    <span class="nav-icon">🔍</span>相性チェック
+  </button>
+  <button class="nav-btn" id="nav-chart" onclick="switchView('chart')">
+    <span class="nav-icon">📊</span>全体表
+  </button>
+  <button class="nav-btn" id="nav-rocket" onclick="switchView('rocket')">
+    <span class="nav-icon">🚀</span>ロケット団
+  </button>
+</nav>
+
+
+
+<!-- ============ CHECKER VIEW ============ -->
+<div id="view-checker">
+
+  <div class="mode-pill">
+    <button class="mode-btn active" id="mode-atk" onclick="setMode('atk')">⚔️ 攻撃する側</button>
+    <button class="mode-btn" id="mode-def" onclick="setMode('def')">🛡️ 攻撃される側</button>
+  </div>
+
+  <div class="section-label" id="type-label">自分のわざのタイプを選ぶ</div>
+  <div class="type-grid" id="type-grid"></div>
+
+  <div class="results" id="results">
+    <div class="no-result">👆 タイプを選んでください</div>
+  </div>
+
+</div>
+
+<!-- ============ CHART VIEW ============ -->
+<div id="view-chart">
+  <p class="chart-hint">← 横にスクロール ／ 横→攻撃タイプ ／ 縦→防御タイプ</p>
+  <div class="chart-wrap">
+    <table id="full-chart"></table>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#22dd88;color:#000">2</div> 効果バツグン (×1.6)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#dd6622;color:#fff">½</div> 効果イマイチ (×0.625)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#221133;color:#aa88cc">0</div> 無効 (×0.390)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1e1e30;color:#444466">1</div> 等倍</div>
+  </div>
+</div>
+
+<!-- ============ ROCKET VIEW ============ -->
+<div id="view-rocket">
+  <p class="rocket-header">
+    <strong>2026年4月現在</strong>の手持ち情報です。<br>
+    2体目・3体目はランダム出現。リーダーは必ずシールドを2枚使用します。
+  </p>
+
+  <div class="leader-tabs">
+    <button class="leader-tab active" onclick="switchLeader('cliff')">🗿 クリフ</button>
+    <button class="leader-tab" onclick="switchLeader('sierra')">🌵 シエラ</button>
+    <button class="leader-tab" onclick="switchLeader('arlo')">⚙️ アルロ</button>
+    <button class="leader-tab" onclick="switchLeader('giovanni')">👔 サカキ</button>
+  </div>
+
+  <!-- クリフ -->
+  <div class="leader-panel active" id="panel-cliff">
+    <div class="pokemon-slot">
+      <div class="slot-header">1体目 <span>（固定）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>コイキング <small style="opacity:.6">みず</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">デンジュモク</span>
+        <span class="counter-chip">サンダー</span>
+        <span class="counter-chip">フラージェス</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">2体目 <span>（ランダム）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>エアームド <small style="opacity:.6">はがね/ひこう</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8a038"></span>ユレイドル <small style="opacity:.6">いわ/くさ</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>コノヨザル <small style="opacity:.6">かくとう/ゴースト</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">ホウオウ（エアームド）</span>
+        <span class="counter-chip">ゲッコウガ（ユレイドル）</span>
+        <span class="counter-chip">フーディン（コノヨザル）</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">3体目 <span>（ランダム）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8a038"></span>バンギラス <small style="opacity:.6">いわ/あく</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f08030"></span>バクーダ <small style="opacity:.6">ほのお/いわ</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>エルレイド <small style="opacity:.6">エスパー/かくとう</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">マンムー</span>
+        <span class="counter-chip">ゲッコウガ</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- シエラ -->
+  <div class="leader-panel" id="panel-sierra">
+    <div class="pokemon-slot">
+      <div class="slot-header">1体目 <span>（固定）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#78c850"></span>ハネッコ <small style="opacity:.6">くさ/ひこう/フェアリー</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">マンムー</span>
+        <span class="counter-chip">ホワイトキュレム</span>
+        <span class="counter-chip">トドゼルガ</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">2体目 <span>（ランダム）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>カメックス <small style="opacity:.6">みず</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#7038f8"></span>フライゴン <small style="opacity:.6">ドラゴン/じめん</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>ナットレイ <small style="opacity:.6">はがね/くさ</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">デンジュモク（カメックス）</span>
+        <span class="counter-chip">マンムー（フライゴン）</span>
+        <span class="counter-chip">ヒードラン（ナットレイ）</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">3体目 <span>（ランダム）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>ハガネール <small style="opacity:.6">はがね</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705848"></span>ヘルガー <small style="opacity:.6">ほのお/あく</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>ミロカロス <small style="opacity:.6">みず</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">ヒードラン</span>
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">デンジュモク</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- アルロ -->
+  <div class="leader-panel" id="panel-arlo">
+    <div class="pokemon-slot">
+      <div class="slot-header">1体目 <span>（固定）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>クチート <small style="opacity:.6">はがね/フェアリー</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">ヒードラン</span>
+        <span class="counter-chip">ガオガエン</span>
+        <span class="counter-chip">ヘルガー</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">2体目 <span>（ランダム）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f85888"></span>ヤドラン <small style="opacity:.6">みず/エスパー</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>ハガネール <small style="opacity:.6">はがね</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705848"></span>ゴルーグ <small style="opacity:.6">じめん/ゴースト</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">ガオガエン（ヤドラン）</span>
+        <span class="counter-chip">ヒードラン（ハガネール）</span>
+        <span class="counter-chip">ブラッキー（ゴルーグ）</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">3体目 <span>（ランダム）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f08030"></span>リザードン <small style="opacity:.6">ほのお/ひこう</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f85888"></span>フーディン <small style="opacity:.6">エスパー</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8b820"></span>ハッサム <small style="opacity:.6">はがね/むし</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">カイオーガ（リザードン）</span>
+        <span class="counter-chip">ゲンガー（フーディン）</span>
+        <span class="counter-chip">ヒードラン（ハッサム）</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- サカキ -->
+  <div class="leader-panel" id="panel-giovanni">
+    <div class="pokemon-slot">
+      <div class="slot-header">1体目 <span>（固定）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>ペルシアン <small style="opacity:.6">ノーマル</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">マッシブーン</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">2体目 <span>（ランダム）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#e0c068"></span>ドサイドン <small style="opacity:.6">じめん/いわ</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>キングドラ <small style="opacity:.6">みず/ドラゴン</small></span>
+        <span class="poke-sep">/</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>メタグロス <small style="opacity:.6">はがね/エスパー</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">マンムー（ドサイドン）</span>
+        <span class="counter-chip">マンムー（キングドラ）</span>
+        <span class="counter-chip">ヒードラン（メタグロス）</span>
+      </div>
+    </div>
+    <div class="pokemon-slot">
+      <div class="slot-header">3体目 <span>（固定・伝説）</span></div>
+      <div class="pokemon-row">
+        <span class="poke-chip" style="background:rgba(152,216,216,.2); color:#98d8d8;"><span class="poke-type-dot" style="background:#98d8d8"></span>シャドウレジアイス <small style="opacity:.7">こおり</small></span>
+      </div>
+      <div class="counter-label">✅ おすすめ対策</div>
+      <div class="counter-row">
+        <span class="counter-chip">ヒードラン</span>
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">バシャーモ</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="update-note">※手持ちは定期的に変更されます。最新情報は攻略サイトで確認を。</p>
+</div>
+
+<script>
+// ─── SVG icons per type (inline, white strokes/fills) ───
+const TYPE_ICONS = {
+  'ノーマル': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.25)"/>
+    <circle cx="12" cy="12" r="3" fill="white"/>
+  </svg>`,
+
+  'ほのお': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3 C12 3 9 7 10 10 C7 8 7 5 7 5 C5 8 5 12 7 15 C9 18 12 21 12 21 C12 21 15 18 17 15 C19 12 19 8 17 5 C17 5 17 8 14 10 C15 7 12 3 12 3Z" fill="rgba(255,255,255,0.9)" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+    <ellipse cx="12" cy="17" rx="3" ry="2" fill="rgba(255,200,100,0.6)"/>
+  </svg>`,
+
+  'みず': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 4 C12 4 6 11 6 15 C6 18.3 8.7 21 12 21 C15.3 21 18 18.3 18 15 C18 11 12 4 12 4Z" fill="rgba(255,255,255,0.85)" stroke="white" stroke-width="0.5"/>
+  </svg>`,
+
+  'でんき': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13 3 L7 13 L11.5 13 L11 21 L17 11 L12.5 11 Z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+  </svg>`,
+
+  'くさ': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 20 C12 20 12 12 12 10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M12 14 C12 14 8 12 6 8 C6 8 10 8 12 12" fill="rgba(255,255,255,0.7)" stroke="white" stroke-width="0.8" stroke-linejoin="round"/>
+    <path d="M12 11 C12 11 16 9 18 5 C18 5 14 5 12 9" fill="rgba(255,255,255,0.7)" stroke="white" stroke-width="0.8" stroke-linejoin="round"/>
+    <path d="M12 17 C12 17 9 15 7 12" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>`,
+
+  'こおり': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="12" y1="3" x2="12" y2="21" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="3" y1="12" x2="21" y2="12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="5.6" y1="5.6" x2="18.4" y2="18.4" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="18.4" y1="5.6" x2="5.6" y2="18.4" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="12" y1="3" x2="10" y2="6" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="12" y1="3" x2="14" y2="6" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="12" y1="21" x2="10" y2="18" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="12" y1="21" x2="14" y2="18" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>`,
+
+  'かくとう': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="5" y="9" width="9" height="7" rx="2" fill="rgba(255,255,255,0.85)" stroke="white" stroke-width="0.5"/>
+    <rect x="10" y="7" width="4" height="3" rx="1" fill="rgba(255,255,255,0.85)" stroke="white" stroke-width="0.5"/>
+    <rect x="14" y="11" width="5" height="3" rx="1.5" fill="rgba(255,255,255,0.6)" stroke="white" stroke-width="0.5"/>
+    <path d="M5 12 C4 12 3 13 3 14 C3 15 4 16 5 16" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </svg>`,
+
+  'どく': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="13" r="6" fill="rgba(255,255,255,0.8)" stroke="white" stroke-width="0.5"/>
+    <circle cx="9.5" cy="11.5" r="1.2" fill="rgba(160,64,160,0.5)"/>
+    <circle cx="14.5" cy="11.5" r="1.2" fill="rgba(160,64,160,0.5)"/>
+    <path d="M9 5 L9 9" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M15 5 L15 9" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M7 6 L11 6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M13 6 L17 6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
+
+  'じめん': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 17 Q7 12 12 14 Q17 16 21 11" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <path d="M3 20 L21 20" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M3 17 L3 20 L21 20 L21 11 Q17 16 12 14 Q7 12 3 17Z" fill="rgba(255,255,255,0.3)"/>
+    <circle cx="7" cy="19" r="1" fill="white" opacity="0.5"/>
+    <circle cx="14" cy="19" r="0.8" fill="white" opacity="0.4"/>
+    <circle cx="19" cy="19" r="1.2" fill="white" opacity="0.5"/>
+  </svg>`,
+
+  'ひこう': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 12 L10 9 L12 4 L14 9 L21 7 L16 13 L21 17 L14 15 L12 20 L10 15 L3 18 L8 12 Z" fill="rgba(255,255,255,0.8)" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+  </svg>`,
+
+  'エスパー': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="8" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/>
+    <path d="M12 4 C12 4 16 8 16 12 C16 16 12 20 12 20" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M12 4 C12 4 8 8 8 12 C8 16 12 20 12 20" stroke="white" stroke-width="1.5" fill="none"/>
+    <circle cx="12" cy="12" r="2.5" fill="white"/>
+    <path d="M4 12 L20 12" stroke="white" stroke-width="1" opacity="0.5"/>
+  </svg>`,
+
+  'むし': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="12" cy="14" rx="4" ry="5" fill="rgba(255,255,255,0.85)" stroke="white" stroke-width="0.5"/>
+    <circle cx="12" cy="8" r="3" fill="rgba(255,255,255,0.85)" stroke="white" stroke-width="0.5"/>
+    <path d="M8 10 C5 8 3 6 4 4" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M16 10 C19 8 21 6 20 4" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M8 14 C5 13 3 15 3 17" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M16 14 C19 13 21 15 21 17" stroke="white" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M10 6 L10 5 M14 6 L14 5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  </svg>`,
+
+  'いわ': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="12,4 20,9 18,18 6,18 4,9" fill="rgba(255,255,255,0.8)" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+    <line x1="12" y1="4" x2="6" y2="18" stroke="rgba(0,0,0,0.2)" stroke-width="0.8"/>
+    <line x1="12" y1="4" x2="18" y2="18" stroke="rgba(0,0,0,0.2)" stroke-width="0.8"/>
+    <line x1="4" y1="9" x2="20" y2="9" stroke="rgba(0,0,0,0.15)" stroke-width="0.8"/>
+  </svg>`,
+
+  'ゴースト': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 20 L6 10 C6 6.7 8.7 4 12 4 C15.3 4 18 6.7 18 10 L18 20 L15.5 18 L13 20 L10.5 18 L8 20 Z" fill="rgba(255,255,255,0.8)" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+    <circle cx="9.5" cy="11" r="1.5" fill="rgba(112,88,152,0.6)"/>
+    <circle cx="14.5" cy="11" r="1.5" fill="rgba(112,88,152,0.6)"/>
+    <path d="M10 14.5 Q12 16 14 14.5" stroke="rgba(112,88,152,0.6)" stroke-width="1" stroke-linecap="round" fill="none"/>
+  </svg>`,
+
+  'ドラゴン': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3 L15 8 L20 6 L17 11 L21 13 L16 14 L18 19 L12 16 L6 19 L8 14 L3 13 L7 11 L4 6 L9 8 Z" fill="rgba(255,255,255,0.85)" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="2" fill="rgba(112,56,248,0.4)"/>
+  </svg>`,
+
+  'あく': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3 C12 3 20 7 20 14 C20 18 16 21 12 21 C8 21 4 18 4 14 C4 7 12 3 12 3Z" fill="rgba(255,255,255,0.8)" stroke="white" stroke-width="0.5"/>
+    <path d="M8 13 C8 13 10 11 12 13 C14 15 16 13 16 13" stroke="rgba(112,88,72,0.7)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <path d="M9 10 L9 10.1" stroke="rgba(112,88,72,0.8)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M15 10 L15 10.1" stroke="rgba(112,88,72,0.8)" stroke-width="2" stroke-linecap="round"/>
+  </svg>`,
+
+  'はがね': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="12,3 21,7.5 21,16.5 12,21 3,16.5 3,7.5" fill="rgba(255,255,255,0.75)" stroke="white" stroke-width="1" stroke-linejoin="round"/>
+    <polygon points="12,7 17,9.5 17,14.5 12,17 7,14.5 7,9.5" fill="rgba(184,184,208,0.5)" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="1.5" fill="white"/>
+  </svg>`,
+
+  'フェアリー': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3 L13.5 9 L19 8 L15 12 L19 16 L13.5 15 L12 21 L10.5 15 L5 16 L9 12 L5 8 L10.5 9 Z" fill="rgba(255,255,255,0.9)" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="2" fill="rgba(238,153,172,0.6)"/>
+  </svg>`,
+};
+
+function typeIcon(t) {
+  return TYPE_ICONS[t] || '';
+}
+const TYPES = [
+  'ノーマル','ほのお','みず','でんき','くさ','こおり',
+  'かくとう','どく','じめん','ひこう','エスパー','むし',
+  'いわ','ゴースト','ドラゴン','あく','はがね','フェアリー'
+];
+
+// chart[atk][def] → multiplier (2 / 0.5 / 0 / 1)
+// Rows = attack type index, Cols = defense type index
+// Standard main series chart (same effectiveness in GO except immune = ×0.390)
+const CHART_RAW = [
+  // NOR HON MIZ ELE KUS KOO KAK DOK JIM HIK ESP MUS IWA GOS DRA AKU HAG FEA
+  [1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, .5,  0,  1,  1, .5,  1], // ノーマル
+  [1, .5, .5,  1,  2,  2,  1,  1,  1,  1,  1,  2, .5,  1, .5,  1,  2,  1], // ほのお
+  [1,  2, .5,  1, .5,  1,  1,  1,  2,  1,  1,  1,  2,  1, .5,  1,  1,  1], // みず
+  [1,  1,  2, .5, .5,  1,  1,  1,  0,  2,  1,  1,  1,  1, .5,  1,  1,  1], // でんき
+  [1, .5,  2,  1, .5,  1,  1, .5,  2, .5,  1, .5,  2,  1, .5,  1, .5,  1], // くさ
+  [1, .5, .5,  1,  2, .5,  1,  1,  2,  2,  1,  1,  1,  1, .5,  1, .5,  1], // こおり
+  [2,  1,  1,  1,  1,  2,  1, .5,  1, .5, .5, .5,  2,  0,  1,  2,  2, .5], // かくとう
+  [1,  1,  1,  1,  2,  1,  1, .5, .5,  1,  1,  1, .5, .5,  1,  1,  0,  2], // どく
+  [1,  2,  1,  2, .5,  1,  1,  2,  1,  0,  1, .5,  2,  1,  1,  1,  2,  1], // じめん
+  [1,  1,  1, .5,  2,  1,  2,  1,  1,  1,  1,  2, .5,  1,  1,  1, .5,  1], // ひこう
+  [1,  1,  1,  1,  1,  1,  2,  2,  1,  1, .5,  1,  1,  1,  1,  0, .5,  1], // エスパー
+  [1, .5,  1,  1,  2,  1, .5, .5,  1, .5,  2,  1,  1, .5,  1,  2, .5, .5], // むし
+  [1,  2,  1,  1,  1,  2, .5,  1, .5,  2,  1,  2,  1,  1,  1,  1, .5,  1], // いわ
+  [0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  1,  1,  2,  1, .5,  1,  1], // ゴースト
+  [1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  1, .5,  0], // ドラゴン
+  [1,  1,  1,  1,  1,  1, .5,  1,  1,  1,  2,  1,  1,  2,  1, .5,  1, .5], // あく
+  [1, .5,  1,  1, .5,  2,  1,  1,  1, .5,  1, .5,  2,  1,  1,  1, .5,  2], // はがね
+  [1, .5,  1,  1,  1,  1,  2, .5,  1,  1,  1,  1,  1,  1,  2,  2, .5,  1], // フェアリー
+];
+
+let currentMode = 'atk';
+let selectedType = null;
+
+function typeClass(t) {
+  return 'c-' + t;
+}
+
+function buildTypeGrid() {
+  const grid = document.getElementById('type-grid');
+  grid.innerHTML = '';
+  TYPES.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'type-btn ' + typeClass(t);
+    btn.innerHTML = typeIcon(t) + t;
+    btn.onclick = () => selectType(i);
+    grid.appendChild(btn);
+  });
+}
+
+function selectType(idx) {
+  selectedType = idx;
+  document.querySelectorAll('.type-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i === idx);
+  });
+  showResults();
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-atk').classList.toggle('active', mode === 'atk');
+  document.getElementById('mode-def').classList.toggle('active', mode === 'def');
+  document.getElementById('type-label').textContent =
+    mode === 'atk' ? 'わざのタイプを選ぶ' : '相手のポケモンのタイプを選ぶ';
+  selectedType = null;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('results').innerHTML = '<div class="no-result">👆 タイプを選んでください</div>';
+}
+
+function showResults() {
+  const idx = selectedType;
+  const isAtk = currentMode === 'atk';
+  const res = document.getElementById('results');
+
+  // Gather effectiveness
+  const x2 = [], x05 = [], x0 = [];
+
+  if (isAtk) {
+    // selected = attack type; look at row
+    TYPES.forEach((t, di) => {
+      const v = CHART_RAW[idx][di];
+      if (v === 2)   x2.push(di);
+      if (v === 0.5) x05.push(di);
+      if (v === 0)   x0.push(di);
+    });
+  } else {
+    // selected = defense type; look at column
+    TYPES.forEach((t, ai) => {
+      const v = CHART_RAW[ai][idx];
+      if (v === 2)   x2.push(ai);
+      if (v === 0.5) x05.push(ai);
+      if (v === 0)   x0.push(ai);
+    });
+  }
+
+  const typeName = TYPES[idx];
+  const chips = (arr) => arr.length
+    ? arr.map(i => `<span class="result-type-chip ${typeClass(TYPES[i])}">${typeIcon(TYPES[i])}${TYPES[i]}</span>`).join('')
+    : '<span class="no-result">なし</span>';
+
+  const atkLabel = isAtk
+    ? `「${typeName}」わざが<strong>バツグン</strong>の相手タイプ`
+    : `「${typeName}」タイプに<strong>バツグン</strong>になる攻撃タイプ`;
+  const badLabel = isAtk
+    ? `「${typeName}」わざが<strong>イマイチ</strong>の相手タイプ`
+    : `「${typeName}」タイプに<strong>イマイチ</strong>になる攻撃タイプ`;
+  const immLabel = isAtk
+    ? `「${typeName}」わざが<strong>無効</strong>の相手タイプ`
+    : `「${typeName}」タイプに<strong>無効</strong>になる攻撃タイプ`;
+
+  res.innerHTML = `
+    <div class="result-title">${typeName}タイプの相性</div>
+
+    <div class="result-group">
+      <div class="result-group-label label-great">✅ バツグン ×1.6</div>
+      <div class="result-types">${chips(x2)}</div>
+    </div>
+
+    <div class="result-group">
+      <div class="result-group-label label-bad">❌ イマイチ ×0.625</div>
+      <div class="result-types">${chips(x05)}</div>
+    </div>
+
+    <div class="result-group">
+      <div class="result-group-label label-immune">🚫 ほぼ無効 ×0.390</div>
+      <div class="result-types">${chips(x0)}</div>
+    </div>
+  `;
+}
+
+function buildFullChart() {
+  const table = document.getElementById('full-chart');
+  // Header row
+  let html = '<thead><tr><th class="corner">防御→<br>攻撃↓</th>';
+  TYPES.forEach(t => {
+    html += `<th><div class="atk-label" style="font-size:.48rem">${t}</div></th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  CHART_RAW.forEach((row, ai) => {
+    html += `<tr><td style="text-align:right;padding-right:3px;font-size:.52rem;font-weight:700;color:#aaa;white-space:nowrap">${TYPES[ai]}</td>`;
+    row.forEach(v => {
+      let cls = 'eff-1', label = '';
+      if (v === 2)   { cls = 'eff-2';  label = '2'; }
+      if (v === 0.5) { cls = 'eff-05'; label = '½'; }
+      if (v === 0)   { cls = 'eff-0';  label = '0'; }
+      html += `<td class="${cls}">${label}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function switchView(v) {
+  document.getElementById('view-checker').style.display = v === 'checker' ? 'block' : 'none';
+  document.getElementById('view-chart').style.display   = v === 'chart'   ? 'block' : 'none';
+  document.getElementById('view-rocket').style.display  = v === 'rocket'  ? 'block' : 'none';
+  ['checker','chart','rocket'].forEach(id => {
+    document.getElementById('nav-' + id).classList.toggle('active', id === v);
+  });
+}
+
+function switchLeader(id) {
+  document.querySelectorAll('.leader-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.leader-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Init
+buildTypeGrid();
+buildFullChart();
+
+// PWA: Service Worker登録
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('SW登録完了'))
+      .catch(e => console.log('SW登録失敗:', e));
+  });
+}
+</script>
+</body>
+</html>
