@@ -420,6 +420,95 @@
     margin-top: 14px;
     font-style: italic;
   }
+
+  /* ─── リーダー/下っ端 切替 ─── */
+  .section-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .section-tab {
+    padding: 11px 8px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--sub);
+    font-family: inherit;
+    font-size: .78rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+  }
+  .section-tab.active { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,.08); }
+
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  /* ─── 下っ端カード ─── */
+  .grunt-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .grunt-type-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .grunt-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: .78rem;
+    font-weight: 900;
+    letter-spacing: .04em;
+  }
+  .grunt-shield {
+    margin-left: auto;
+    font-size: .63rem;
+    color: var(--sub);
+    background: var(--border);
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+  .grunt-section-label {
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: var(--sub);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-top: 10px;
+  }
+  .grunt-section-label:first-of-type { margin-top: 0; }
+  .grunt-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 10px 0;
+  }
+  .shiny-badge {
+    font-size: .6rem;
+    color: #f8d800;
+    background: rgba(248,216,0,.15);
+    border-radius: 5px;
+    padding: 1px 4px;
+    margin-left: 2px;
+  }
+  .grunt-title {
+    font-size: .85rem;
+    font-weight: 900;
+    color: var(--sub);
+    letter-spacing: .08em;
+    margin-bottom: 12px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -476,15 +565,23 @@
 <div id="view-rocket">
   <p class="rocket-header">
     <strong>情報更新日：2026年4月30日</strong>（はがねの決意：占拠 対応）<br>
-    イベント期間：4月30日〜5月4日 20:00 ／ 2体目・3体目はランダム出現。リーダーはシールド2枚使用。
+    イベント期間：4月30日〜5月4日 20:00 ／ 2体目・3体目はランダム出現。
   </p>
 
-  <div class="leader-tabs">
-    <button class="leader-tab active" onclick="switchLeader('cliff')">🗿 クリフ</button>
-    <button class="leader-tab" onclick="switchLeader('sierra')">🌵 シエラ</button>
-    <button class="leader-tab" onclick="switchLeader('arlo')">⚙️ アルロ</button>
-    <button class="leader-tab" onclick="switchLeader('giovanni')">👔 サカキ</button>
+  <!-- リーダー / 下っ端 切替 -->
+  <div class="section-tabs">
+    <button class="section-tab active" id="sec-tab-leader" onclick="switchSection('leader')">👑 リーダー</button>
+    <button class="section-tab" id="sec-tab-grunt" onclick="switchSection('grunt')">👊 下っ端</button>
   </div>
+
+  <!-- ══ リーダーパネル ══ -->
+  <div class="section-panel active" id="sec-leader">
+    <div class="leader-tabs">
+      <button class="leader-tab active" onclick="switchLeader('cliff')">🗿 クリフ</button>
+      <button class="leader-tab" onclick="switchLeader('sierra')">🌵 シエラ</button>
+      <button class="leader-tab" onclick="switchLeader('arlo')">⚙️ アルロ</button>
+      <button class="leader-tab" onclick="switchLeader('giovanni')">👔 サカキ</button>
+    </div>
 
   <!-- クリフ -->
   <div class="leader-panel active" id="panel-cliff">
@@ -672,7 +769,424 @@
     </div>
   </div>
 
-  <p class="update-note">※次回の占拠イベント開始時に手持ちが変わります。最新情報は攻略サイトで確認を。</p>
+    <p class="update-note">※次回の占拠イベント開始時に手持ちが変わります。最新情報は攻略サイトで確認を。</p>
+  </div><!-- /sec-leader -->
+
+  <!-- ══ 下っ端パネル ══ -->
+  <div class="section-panel" id="sec-grunt">
+    <p class="grunt-title">⚔️ タイプ別 下っ端 攻略</p>
+
+    <!-- ノーマル -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(168,168,120,.15);color:#c8c8a0;border:1px solid rgba(168,168,120,.4)">⭐ ノーマル</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>ニャース <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>ヌイコグマ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>ヒメグマ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>ドゴーム <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>チルット <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>ムックル <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">ケルディオ</span>
+        <span class="counter-chip">マッシブーン</span>
+      </div>
+    </div>
+
+    <!-- ほのお -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(240,128,48,.15);color:#f08030;border:1px solid rgba(240,128,48,.4)">🔥 ほのお</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f08030"></span>ロコン <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f08030"></span>ブーバー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f08030"></span>ドンメル <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>ヒトモシ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f08030"></span>フォッコ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f08030"></span>テールナー <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">カイオーガ</span>
+        <span class="counter-chip">キングドラ</span>
+        <span class="counter-chip">マンムー</span>
+      </div>
+    </div>
+
+    <!-- みず -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(104,144,240,.15);color:#6890f0;border:1px solid rgba(104,144,240,.4)">💧 みず</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>クラブ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>メノクラゲ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>ケロマツ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>シズクモ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>キバニア <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>ゲコガシラ <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">デンジュモク</span>
+        <span class="counter-chip">エレキブル</span>
+        <span class="counter-chip">フシギバナ</span>
+      </div>
+    </div>
+
+    <!-- でんき -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(248,208,48,.15);color:#f8d030;border:1px solid rgba(248,208,48,.4)">⚡ でんき</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f8d030"></span>ビリリダマ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f8d030"></span>エレブー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f8d030"></span>コリンク <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f8d030"></span>エリキテル <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8a038"></span>イシツブテ(ア) <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">グライオン</span>
+        <span class="counter-chip">マンムー</span>
+        <span class="counter-chip">ガブリアス</span>
+      </div>
+    </div>
+
+    <!-- くさ -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(120,200,80,.15);color:#78c850;border:1px solid rgba(120,200,80,.4)">🌿 くさ</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#78c850"></span>サボネア <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8b820"></span>リリーラ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#78c850"></span>ハリマロン <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#78c850"></span>ネマシュ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#78c850"></span>ハリボーグ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>ボクレー <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ヒードラン</span>
+        <span class="counter-chip">バシャーモ</span>
+        <span class="counter-chip">ガラルヒヒダルマ</span>
+      </div>
+    </div>
+
+    <!-- こおり -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(152,216,216,.15);color:#98d8d8;border:1px solid rgba(152,216,216,.4)">🧊 こおり</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#98d8d8"></span>ウリムー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#98d8d8"></span>タマザラシ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#98d8d8"></span>ニューラ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#98d8d8"></span>トドグラー</span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#98d8d8"></span>キュウコン(ア)</span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">バシャーモ</span>
+        <span class="counter-chip">マグカルゴ</span>
+        <span class="counter-chip">ヒードラン</span>
+      </div>
+    </div>
+
+    <!-- かくとう -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(192,48,40,.15);color:#e06858;border:1px solid rgba(192,48,40,.4)">🥊 かくとう</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>マンキー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>ワンリキー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>サワムラー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>エビワラー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>ドッコラー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#c03028"></span>カポエラー <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">フーディン</span>
+        <span class="counter-chip">トゲキッス</span>
+        <span class="counter-chip">アーケオス</span>
+      </div>
+    </div>
+
+    <!-- どく -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(160,64,160,.15);color:#c080c0;border:1px solid rgba(160,64,160,.4)">☠️ どく</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a040a0"></span>ニドリーナ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a040a0"></span>ニドリーノ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#78c850"></span>ナゾノクサ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a040a0"></span>ズバット <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>ハリーセン <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a040a0"></span>マタドガス(ガ) <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">グライオン</span>
+        <span class="counter-chip">フーディン</span>
+        <span class="counter-chip">ランドロス</span>
+      </div>
+    </div>
+
+    <!-- じめん -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(224,192,104,.15);color:#e0c068;border:1px solid rgba(224,192,104,.4)">🌍 じめん</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#e0c068"></span>サンド <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#e0c068"></span>グライガー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#e0c068"></span>ナックラー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#e0c068"></span>ビブラーバ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#e0c068"></span>ネンドール <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">カイオーガ</span>
+        <span class="counter-chip">マンムー</span>
+        <span class="counter-chip">フシギバナ</span>
+      </div>
+    </div>
+
+    <!-- ひこう -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(168,144,240,.15);color:#a890f0;border:1px solid rgba(168,144,240,.4)">🌀 ひこう</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a890f0"></span>ポッポ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a890f0"></span>スバメ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a890f0"></span>チルット <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">デンジュモク</span>
+        <span class="counter-chip">マンムー</span>
+        <span class="counter-chip">バンギラス</span>
+      </div>
+    </div>
+
+    <!-- エスパー -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(248,88,136,.15);color:#f85888;border:1px solid rgba(248,88,136,.4)">🔮 エスパー</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f85888"></span>スリープ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f85888"></span>ソーナンス <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f85888"></span>ラルトス <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ブラッキー</span>
+        <span class="counter-chip">ゲンガー</span>
+        <span class="counter-chip">ゲッコウガ</span>
+      </div>
+    </div>
+
+    <!-- むし -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(168,184,32,.15);color:#a8b820;border:1px solid rgba(168,184,32,.4)">🐛 むし</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8b820"></span>コンパン <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8b820"></span>カイロス <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8b820"></span>チョボマキ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8b820"></span>カブルモ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8b820"></span>アノプス <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>シズクモ <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ヒードラン</span>
+        <span class="counter-chip">バンギラス</span>
+        <span class="counter-chip">アーケオス</span>
+      </div>
+    </div>
+
+    <!-- いわ -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(184,160,56,.15);color:#b8a038;border:1px solid rgba(184,160,56,.4)">🪨 いわ</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8a038"></span>オムナイト <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8a038"></span>ツボツボ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8a038"></span>ズガイドス <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">カイオーガ</span>
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">マンムー</span>
+      </div>
+    </div>
+
+    <!-- ゴースト -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(112,88,152,.15);color:#a080c0;border:1px solid rgba(112,88,152,.4)">👻 ゴースト</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>ゴース <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>ヨマワル <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>デスマス <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>ヤミラミ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>サマヨール <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705898"></span>デスカーン <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ゲンガー</span>
+        <span class="counter-chip">ギラティナ</span>
+        <span class="counter-chip">ブラッキー</span>
+      </div>
+    </div>
+
+    <!-- ドラゴン -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(112,56,248,.15);color:#9070f8;border:1px solid rgba(112,56,248,.4)">🐉 ドラゴン</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#7038f8"></span>ミニリュウ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#7038f8"></span>タツベイ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#7038f8"></span>モノズ <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">マンムー</span>
+        <span class="counter-chip">トゲキッス</span>
+        <span class="counter-chip">レックウザ</span>
+      </div>
+    </div>
+
+    <!-- あく -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(112,88,72,.15);color:#9a8878;border:1px solid rgba(112,88,72,.5)">🌑 あく</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705848"></span>コラッタ(ア) <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#705848"></span>ポチエナ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>キバニア <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">トゲキッス</span>
+        <span class="counter-chip">ゲッコウガ</span>
+      </div>
+    </div>
+
+    <!-- はがね -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(184,184,208,.15);color:#b8b8d0;border:1px solid rgba(184,184,208,.4)">🔩 はがね</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>サンド(ア) <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>ココドラ <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#b8b8d0"></span>ダンバル <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ヒードラン</span>
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">グライオン</span>
+      </div>
+    </div>
+
+    <!-- フェアリー -->
+    <div class="grunt-card">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge" style="background:rgba(238,153,172,.15);color:#ee99ac;border:1px solid rgba(238,153,172,.4)">🌸 フェアリー</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#98d8d8"></span>ロコン(ア) <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#ee99ac"></span>ブルー <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f85888"></span>ラルトス <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ヒードラン</span>
+        <span class="counter-chip">ゲンガー</span>
+        <span class="counter-chip">メタグロス</span>
+      </div>
+    </div>
+
+    <p class="update-note">※下っ端のポケモンはランダム出現。最新情報は攻略サイトで確認を。</p>
+  </div><!-- /sec-grunt -->
+
 </div>
 
 <script>
@@ -971,6 +1485,13 @@ function switchLeader(id) {
   document.querySelectorAll('.leader-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
   event.target.classList.add('active');
+}
+
+function switchSection(sec) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + sec).classList.add('active');
+  document.getElementById('sec-tab-' + sec).classList.add('active');
 }
 
 // Init
