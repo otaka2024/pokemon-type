@@ -506,9 +506,69 @@
     font-weight: 900;
     color: var(--sub);
     letter-spacing: .08em;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     text-align: center;
   }
+
+  /* ─── タイプ クイックナビ ─── */
+  .grunt-quicknav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: 14px;
+    padding-bottom: 2px;
+  }
+  .grunt-quicknav::-webkit-scrollbar { display: none; }
+  .grunt-quicknav-inner {
+    display: flex;
+    gap: 5px;
+    width: max-content;
+    padding: 2px 0;
+  }
+  .gqn-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-size: .63rem;
+    font-weight: 900;
+    white-space: nowrap;
+    text-decoration: none;
+    letter-spacing: .02em;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .gqn-chip:active { opacity: .65; }
+
+  /* 強力タイプ 専用スタイル */
+  .grunt-card.strong-type {
+    border-color: rgba(255,68,68,.4);
+    background: rgba(255,68,68,.04);
+  }
+  .grunt-card.strong-type .grunt-type-badge {
+    background: rgba(255,68,68,.15);
+    color: #ff6666;
+    border: 1px solid rgba(255,68,68,.5);
+  }
+  .grunt-card.strong-type .grunt-shield {
+    background: rgba(255,68,68,.15);
+    color: #ff8888;
+    border: 1px solid rgba(255,68,68,.3);
+  }
+
+  /* 情報源リンク */
+  .source-link-row {
+    text-align: center;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .source-link-row a {
+    font-size: .62rem;
+    color: var(--sub);
+    text-decoration: none;
+  }
+  .source-link-row a:hover { color: var(--text); text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -776,8 +836,33 @@
   <div class="section-panel" id="sec-grunt">
     <p class="grunt-title">⚔️ タイプ別 下っ端 攻略</p>
 
+    <!-- クイックナビ -->
+    <div class="grunt-quicknav">
+      <div class="grunt-quicknav-inner">
+        <a href="#grunt-normal" class="gqn-chip" style="background:rgba(168,168,120,.2);color:#c8c8a0;border:1px solid rgba(168,168,120,.4)">⭐ ノーマル</a>
+        <a href="#grunt-fire"   class="gqn-chip" style="background:rgba(240,128,48,.15);color:#f08030;border:1px solid rgba(240,128,48,.4)">🔥 ほのお</a>
+        <a href="#grunt-water"  class="gqn-chip" style="background:rgba(104,144,240,.15);color:#6890f0;border:1px solid rgba(104,144,240,.4)">💧 みず</a>
+        <a href="#grunt-electric" class="gqn-chip" style="background:rgba(248,208,48,.15);color:#f8d030;border:1px solid rgba(248,208,48,.4)">⚡ でんき</a>
+        <a href="#grunt-grass"  class="gqn-chip" style="background:rgba(120,200,80,.15);color:#78c850;border:1px solid rgba(120,200,80,.4)">🌿 くさ</a>
+        <a href="#grunt-ice"    class="gqn-chip" style="background:rgba(152,216,216,.15);color:#98d8d8;border:1px solid rgba(152,216,216,.4)">🧊 こおり</a>
+        <a href="#grunt-fighting" class="gqn-chip" style="background:rgba(192,48,40,.15);color:#e06858;border:1px solid rgba(192,48,40,.4)">🥊 かくとう</a>
+        <a href="#grunt-poison" class="gqn-chip" style="background:rgba(160,64,160,.15);color:#c080c0;border:1px solid rgba(160,64,160,.4)">☠️ どく</a>
+        <a href="#grunt-ground" class="gqn-chip" style="background:rgba(224,192,104,.15);color:#e0c068;border:1px solid rgba(224,192,104,.4)">🌍 じめん</a>
+        <a href="#grunt-flying" class="gqn-chip" style="background:rgba(168,144,240,.15);color:#a890f0;border:1px solid rgba(168,144,240,.4)">🌀 ひこう</a>
+        <a href="#grunt-psychic" class="gqn-chip" style="background:rgba(248,88,136,.15);color:#f85888;border:1px solid rgba(248,88,136,.4)">🔮 エスパー</a>
+        <a href="#grunt-bug"    class="gqn-chip" style="background:rgba(168,184,32,.15);color:#a8b820;border:1px solid rgba(168,184,32,.4)">🐛 むし</a>
+        <a href="#grunt-rock"   class="gqn-chip" style="background:rgba(184,160,56,.15);color:#b8a038;border:1px solid rgba(184,160,56,.4)">🪨 いわ</a>
+        <a href="#grunt-ghost"  class="gqn-chip" style="background:rgba(112,88,152,.15);color:#a080c0;border:1px solid rgba(112,88,152,.4)">👻 ゴースト</a>
+        <a href="#grunt-dragon" class="gqn-chip" style="background:rgba(112,56,248,.15);color:#9070f8;border:1px solid rgba(112,56,248,.4)">🐉 ドラゴン</a>
+        <a href="#grunt-dark"   class="gqn-chip" style="background:rgba(112,88,72,.15);color:#9a8878;border:1px solid rgba(112,88,72,.5)">🌑 あく</a>
+        <a href="#grunt-steel"  class="gqn-chip" style="background:rgba(184,184,208,.15);color:#b8b8d0;border:1px solid rgba(184,184,208,.4)">🔩 はがね</a>
+        <a href="#grunt-fairy"  class="gqn-chip" style="background:rgba(238,153,172,.15);color:#ee99ac;border:1px solid rgba(238,153,172,.4)">🌸 フェアリー</a>
+        <a href="#grunt-strong" class="gqn-chip" style="background:rgba(255,68,68,.15);color:#ff6666;border:1px solid rgba(255,68,68,.5)">💪 強力</a>
+      </div>
+    </div>
+
     <!-- ノーマル -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-normal">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(168,168,120,.15);color:#c8c8a0;border:1px solid rgba(168,168,120,.4)">⭐ ノーマル</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -801,7 +886,7 @@
     </div>
 
     <!-- ほのお -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-fire">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(240,128,48,.15);color:#f08030;border:1px solid rgba(240,128,48,.4)">🔥 ほのお</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -825,7 +910,7 @@
     </div>
 
     <!-- みず -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-water">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(104,144,240,.15);color:#6890f0;border:1px solid rgba(104,144,240,.4)">💧 みず</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -849,7 +934,7 @@
     </div>
 
     <!-- でんき -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-electric">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(248,208,48,.15);color:#f8d030;border:1px solid rgba(248,208,48,.4)">⚡ でんき</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -872,7 +957,7 @@
     </div>
 
     <!-- くさ -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-grass">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(120,200,80,.15);color:#78c850;border:1px solid rgba(120,200,80,.4)">🌿 くさ</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -896,7 +981,7 @@
     </div>
 
     <!-- こおり -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-ice">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(152,216,216,.15);color:#98d8d8;border:1px solid rgba(152,216,216,.4)">🧊 こおり</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -919,7 +1004,7 @@
     </div>
 
     <!-- かくとう -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-fighting">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(192,48,40,.15);color:#e06858;border:1px solid rgba(192,48,40,.4)">🥊 かくとう</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -943,7 +1028,7 @@
     </div>
 
     <!-- どく -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-poison">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(160,64,160,.15);color:#c080c0;border:1px solid rgba(160,64,160,.4)">☠️ どく</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -967,7 +1052,7 @@
     </div>
 
     <!-- じめん -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-ground">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(224,192,104,.15);color:#e0c068;border:1px solid rgba(224,192,104,.4)">🌍 じめん</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -990,7 +1075,7 @@
     </div>
 
     <!-- ひこう -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-flying">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(168,144,240,.15);color:#a890f0;border:1px solid rgba(168,144,240,.4)">🌀 ひこう</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1011,7 +1096,7 @@
     </div>
 
     <!-- エスパー -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-psychic">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(248,88,136,.15);color:#f85888;border:1px solid rgba(248,88,136,.4)">🔮 エスパー</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1032,7 +1117,7 @@
     </div>
 
     <!-- むし -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-bug">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(168,184,32,.15);color:#a8b820;border:1px solid rgba(168,184,32,.4)">🐛 むし</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1056,7 +1141,7 @@
     </div>
 
     <!-- いわ -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-rock">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(184,160,56,.15);color:#b8a038;border:1px solid rgba(184,160,56,.4)">🪨 いわ</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1077,7 +1162,7 @@
     </div>
 
     <!-- ゴースト -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-ghost">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(112,88,152,.15);color:#a080c0;border:1px solid rgba(112,88,152,.4)">👻 ゴースト</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1101,7 +1186,7 @@
     </div>
 
     <!-- ドラゴン -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-dragon">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(112,56,248,.15);color:#9070f8;border:1px solid rgba(112,56,248,.4)">🐉 ドラゴン</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1122,7 +1207,7 @@
     </div>
 
     <!-- あく -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-dark">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(112,88,72,.15);color:#9a8878;border:1px solid rgba(112,88,72,.5)">🌑 あく</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1143,7 +1228,7 @@
     </div>
 
     <!-- はがね -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-steel">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(184,184,208,.15);color:#b8b8d0;border:1px solid rgba(184,184,208,.4)">🔩 はがね</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1164,7 +1249,7 @@
     </div>
 
     <!-- フェアリー -->
-    <div class="grunt-card">
+    <div class="grunt-card" id="grunt-fairy">
       <div class="grunt-type-header">
         <span class="grunt-type-badge" style="background:rgba(238,153,172,.15);color:#ee99ac;border:1px solid rgba(238,153,172,.4)">🌸 フェアリー</span>
         <span class="grunt-shield">シールド 0枚</span>
@@ -1184,7 +1269,53 @@
       </div>
     </div>
 
-    <p class="update-note">※下っ端のポケモンはランダム出現。最新情報は攻略サイトで確認を。</p>
+    <!-- 強力タイプ -->
+    <div class="grunt-card strong-type" id="grunt-strong">
+      <div class="grunt-type-header">
+        <span class="grunt-type-badge">💪 強力タイプ</span>
+        <span class="grunt-shield">シールド 0枚</span>
+      </div>
+      <div class="grunt-section-label">💬 このセリフが出たら強力タイプ</div>
+      <div class="pokemon-row">
+        <span class="poke-chip" style="background:rgba(255,68,68,.12);color:#ff8888">「覚悟しろ！」</span>
+        <span class="poke-chip" style="background:rgba(255,68,68,.12);color:#ff8888">「勝者のみが勝利できるのだ」</span>
+        <span class="poke-chip" style="background:rgba(255,68,68,.12);color:#ff8888">「いちおう戦ってみるかー」</span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+      <div class="grunt-section-label" style="margin-top:6px;color:#aaa">1体目（固定）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>カビゴン <span class="shiny-badge">✨</span></span>
+      </div>
+      <div class="grunt-section-label" style="margin-top:8px;color:#aaa">2体目（ランダム）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>ニョロボン <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#f85888"></span>サーナイト <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#6890f0"></span>ギャラドス <span class="shiny-badge">✨</span></span>
+      </div>
+      <div class="grunt-section-label" style="margin-top:8px;color:#aaa">3体目（ランダム）</div>
+      <div class="pokemon-row">
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#a8a878"></span>カビゴン <span class="shiny-badge">✨</span></span>
+        <span class="poke-chip"><span class="poke-type-dot" style="background:#7038f8"></span>カイリュー <span class="shiny-badge">✨</span></span>
+      </div>
+      <hr class="grunt-divider">
+      <div class="counter-label">✅ おすすめ攻撃構成</div>
+      <div class="counter-row">
+        <span class="counter-chip">ルカリオ</span>
+        <span class="counter-chip">タチフサグマ</span>
+        <span class="counter-chip">デンジュモク</span>
+        <span class="counter-chip">メタグロス</span>
+      </div>
+    </div>
+
+    <p class="update-note">※下っ端のポケモンはランダム出現（2・3体目）。情報更新：2026年4月30日（はがねの決意：占拠対応）</p>
+
+    <div class="source-link-row">
+      📖 情報元：
+      <a href="https://pokemongo-get.com/pokego02797/" target="_blank" rel="noopener">pokemongo-get.com（セリフ別使用ポケモン一覧）</a>
+      ／
+      <a href="https://pokemongo-raku.com/post16515" target="_blank" rel="noopener">ポケらく（強力タイプ詳細）</a>
+    </div>
   </div><!-- /sec-grunt -->
 
 </div>
