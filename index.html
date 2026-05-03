@@ -453,6 +453,7 @@
     border-radius: 14px;
     padding: 14px;
     margin-bottom: 10px;
+    scroll-margin-top: 62px;
   }
   .grunt-type-header {
     display: flex;
@@ -515,28 +516,34 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    margin-bottom: 14px;
-    padding-bottom: 2px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    padding: 8px 0 10px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--border);
   }
   .grunt-quicknav::-webkit-scrollbar { display: none; }
   .grunt-quicknav-inner {
     display: flex;
-    gap: 5px;
+    gap: 6px;
     width: max-content;
     padding: 2px 0;
   }
   .gqn-chip {
     display: inline-flex;
     align-items: center;
-    padding: 4px 9px;
+    padding: 7px 13px;
     border-radius: 20px;
-    font-size: .63rem;
+    font-size: .78rem;
     font-weight: 900;
     white-space: nowrap;
     text-decoration: none;
     letter-spacing: .02em;
     cursor: pointer;
     transition: opacity .15s;
+    min-height: 36px;
   }
   .gqn-chip:active { opacity: .65; }
 
