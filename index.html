@@ -48,6 +48,14 @@
     font-size: .75rem;
     color: var(--sub);
     margin-bottom: 20px;
+    position: relative;
+  }
+  .ver-badge {
+    position: absolute;
+    right: 0; top: 0;
+    font-size: .6rem;
+    color: var(--sub);
+    opacity: .5;
   }
 
   /* ─── Bottom nav ─── */
@@ -581,7 +589,7 @@
 <body>
 
 <h1>⚔️ タイプ相性チェッカー</h1>
-<p class="subtitle">ポケモンGO 全18タイプ対応</p>
+<p class="subtitle">ポケモンGO 全18タイプ対応<span class="ver-badge" id="ver-badge"></span></p>
 
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-checker" onclick="switchView('checker')">
@@ -1329,6 +1337,9 @@
 
 <script>
 // ─── SVG icons per type (inline, white strokes/fills) ───
+const APP_VER = '1.0.2';
+document.getElementById('ver-badge').textContent = 'v' + APP_VER;
+
 const TYPE_ICONS = {
   'ノーマル': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.25)"/>
