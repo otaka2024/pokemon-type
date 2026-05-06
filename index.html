@@ -590,6 +590,9 @@
 
 <h1>⚔️ タイプ相性チェッカー</h1>
 <p class="subtitle">ポケモンGO 全18タイプ対応<span class="ver-badge" id="ver-badge"></span></p>
+<p style="text-align:center;margin-top:-12px;margin-bottom:8px">
+  <button id="update-btn" onclick="checkForUpdate()" style="font-size:10px;color:var(--sub);background:transparent;border:1px solid var(--border);border-radius:5px;padding:2px 8px;cursor:pointer;font-family:inherit">🔄 更新確認</button>
+</p>
 
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-checker" onclick="switchView('checker')">
@@ -1641,6 +1644,20 @@ function switchSection(sec) {
   document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('sec-' + sec).classList.add('active');
   document.getElementById('sec-tab-' + sec).classList.add('active');
+}
+
+async function checkForUpdate(){
+  const btn=document.getElementById('update-btn');
+  btn.textContent='確認中…'; btn.disabled=true;
+  try{
+    if('serviceWorker' in navigator){
+      const reg=await navigator.serviceWorker.getRegistration();
+      if(reg) await reg.update();
+    }
+    const keys=await caches.keys();
+    await Promise.all(keys.map(k=>caches.delete(k)));
+    window.location.reload(true);
+  }catch(e){ window.location.reload(true); }
 }
 
 // Init
