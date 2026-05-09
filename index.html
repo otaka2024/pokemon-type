@@ -592,6 +592,7 @@
 <p class="subtitle">ポケモンGO 全18タイプ対応<span class="ver-badge" id="ver-badge"></span></p>
 <p style="text-align:center;margin-top:-12px;margin-bottom:8px">
   <button id="update-btn" onclick="checkForUpdate()" style="font-size:10px;color:var(--sub);background:transparent;border:1px solid var(--border);border-radius:5px;padding:2px 8px;cursor:pointer;font-family:inherit">🔄 更新確認</button>
+  <button id="install-btn" onclick="installApp()" style="display:none;font-size:10px;color:#fff;background:#e85d5d;border:none;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:inherit;margin-left:6px">📲 インストール</button>
 </p>
 
 <nav class="bottom-nav">
@@ -1340,7 +1341,7 @@
 
 <script>
 // ─── SVG icons per type (inline, white strokes/fills) ───
-const APP_VER = '1.0.3';
+const APP_VER = '1.0.4';
 document.getElementById('ver-badge').textContent = 'v' + APP_VER;
 
 const TYPE_ICONS = {
@@ -1670,8 +1671,22 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('beforeinstallprompt', function(e) {
   e.preventDefault();
   window.__installPrompt = e;
-  // インストールボタンがあれば表示（現状はなし。必要なら追加可）
+  const btn = document.getElementById('install-btn');
+  if (btn) btn.style.display = 'inline-block';
 });
+window.addEventListener('appinstalled', function() {
+  const btn = document.getElementById('install-btn');
+  if (btn) btn.style.display = 'none';
+});
+
+async function installApp() {
+  if (!window.__installPrompt) return;
+  window.__installPrompt.prompt();
+  await window.__installPrompt.userChoice;
+  window.__installPrompt = null;
+  const btn = document.getElementById('install-btn');
+  if (btn) btn.style.display = 'none';
+}
 </script>
 </body>
 </html>
