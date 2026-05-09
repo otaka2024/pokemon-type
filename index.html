@@ -1663,6 +1663,15 @@ async function checkForUpdate(){
 // Init
 buildTypeGrid();
 buildFullChart();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' });
+}
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  window.__installPrompt = e;
+  // インストールボタンがあれば表示（現状はなし。必要なら追加可）
+});
 </script>
 </body>
 </html>

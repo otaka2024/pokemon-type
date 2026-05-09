@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>下っ端プレビュー</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f1a; --card: #1a1a2e; --border: #2a2a4a;
+    --text: #e8e8f0; --sub: #8888aa; --great: #22dd88;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; padding: 16px 12px 40px;
+    max-width: 600px; margin: 0 auto;
+  }
+
+  /* ── 説明バナー ── */
+  .preview-note {
+    background: rgba(248,216,0,.1);
+    border: 1px solid rgba(248,216,0,.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: .72rem;
+    color: #f8d800;
+    margin-bottom: 18px;
+    line-height: 1.6;
+  }
+
+  /* ── ヘッダー情報 ── */
+  .rocket-header {
+    font-size: .7rem; color: var(--sub);
+    text-align: center; margin-bottom: 16px; line-height: 1.5;
+  }
+  .rocket-header strong { color: #ff4444; }
+
+  /* ── リーダー/下っ端 切替タブ ── */
+  .section-tabs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6px; margin-bottom: 16px;
+  }
+  .section-tab {
+    padding: 11px 8px; border-radius: 12px;
+    border: 2px solid var(--border); background: var(--card);
+    color: var(--sub); font-family: inherit;
+    font-size: .78rem; font-weight: 700;
+    cursor: pointer; text-align: center;
+  }
+  .section-tab.active { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,.08); }
+
+  /* ── タイプ別カード ── */
+  .grunt-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  /* タイプ見出し */
+  .grunt-type-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .grunt-type-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: .75rem; font-weight: 900;
+    letter-spacing: .04em;
+  }
+  .grunt-shield {
+    margin-left: auto;
+    font-size: .65rem; color: var(--sub);
+    background: var(--border); padding: 3px 8px; border-radius: 8px;
+  }
+
+  /* セクションラベル */
+  .grunt-section-label {
+    font-size: .62rem; font-weight: 700; letter-spacing: .1em;
+    color: var(--sub); text-transform: uppercase;
+    margin-bottom: 5px; margin-top: 10px;
+  }
+  .grunt-section-label:first-of-type { margin-top: 0; }
+
+  /* ポケモンチップ */
+  .poke-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+  .poke-chip {
+    padding: 4px 10px 4px 8px; border-radius: 10px;
+    font-size: .77rem; font-weight: 700;
+    background: var(--border); color: var(--text);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .poke-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .shiny-badge {
+    font-size: .6rem; color: #f8d800;
+    background: rgba(248,216,0,.15); border-radius: 5px;
+    padding: 1px 4px; margin-left: 2px;
+  }
+
+  /* 対策チップ */
+  .counter-row { display: flex; flex-wrap: wrap; gap: 5px; }
+  .counter-chip {
+    padding: 3px 9px; border-radius: 8px;
+    font-size: .73rem; font-weight: 700;
+    background: rgba(34,221,136,.15); color: var(--great);
+    border: 1px solid rgba(34,221,136,.3);
+  }
+
+  /* 区切り線 */
+  .grunt-divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 10px 0;
+  }
+
+  h2 {
+    font-size: .85rem; font-weight: 900;
+    color: var(--sub); letter-spacing: .08em;
+    margin-bottom: 12px; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-note">
+  📐 これはデザインプレビューです。データはサンプル（仮）です。<br>
+  内容・タイプ・ポケモンの追加・修正はお気軽に！
+</div>
+
+<p class="rocket-header">
+  <strong>情報更新日：2026年4月30日</strong>（はがねの決意：占拠 対応）<br>
+  下っ端はシールド0枚。2体目・3体目はランダム出現。
+</p>
+
+<!-- リーダー / 下っ端 切替 -->
+<div class="section-tabs">
+  <button class="section-tab">👑 リーダー</button>
+  <button class="section-tab active">👊 下っ端</button>
+</div>
+
+<h2>⚔️ タイプ別 下っ端 攻略</h2>
+
+<!-- はがね -->
+<div class="grunt-card">
+  <div class="grunt-type-header">
+    <span class="grunt-type-badge" style="background:rgba(184,184,208,.15);color:#b8b8d0;border:1px solid rgba(184,184,208,.4)">
+      🔩 はがね
+    </span>
+    <span class="grunt-shield">シールド 0枚</span>
+  </div>
+  <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+  <div class="poke-row">
+    <span class="poke-chip"><span class="poke-dot" style="background:#b8b8d0"></span>コイル <span class="shiny-badge">✨色違い</span></span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#b8b8d0"></span>レアコイル</span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#b8b8d0"></span>ジバコイル</span>
+  </div>
+  <div class="poke-row">
+    <span class="poke-chip"><span class="poke-dot" style="background:#b8b8d0"></span>ハガネール <span class="shiny-badge">✨色違い</span></span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#b8b8d0"></span>ナットレイ</span>
+  </div>
+  <hr class="grunt-divider">
+  <div class="grunt-section-label">✅ おすすめ攻撃構成</div>
+  <div class="counter-row">
+    <span class="counter-chip">ヒードラン</span>
+    <span class="counter-chip">ルカリオ</span>
+    <span class="counter-chip">マグカルゴ</span>
+  </div>
+</div>
+
+<!-- ほのお -->
+<div class="grunt-card">
+  <div class="grunt-type-header">
+    <span class="grunt-type-badge" style="background:rgba(240,128,48,.15);color:#f08030;border:1px solid rgba(240,128,48,.4)">
+      🔥 ほのお
+    </span>
+    <span class="grunt-shield">シールド 0枚</span>
+  </div>
+  <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+  <div class="poke-row">
+    <span class="poke-chip"><span class="poke-dot" style="background:#f08030"></span>ヒトカゲ <span class="shiny-badge">✨色違い</span></span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#f08030"></span>リザードン</span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#f08030"></span>ブーバーン</span>
+  </div>
+  <hr class="grunt-divider">
+  <div class="grunt-section-label">✅ おすすめ攻撃構成</div>
+  <div class="counter-row">
+    <span class="counter-chip">カイオーガ</span>
+    <span class="counter-chip">ギャラドス</span>
+    <span class="counter-chip">マンムー</span>
+  </div>
+</div>
+
+<!-- ノーマル -->
+<div class="grunt-card">
+  <div class="grunt-type-header">
+    <span class="grunt-type-badge" style="background:rgba(168,168,120,.15);color:#a8a878;border:1px solid rgba(168,168,120,.4)">
+      ⭐ ノーマル
+    </span>
+    <span class="grunt-shield">シールド 0枚</span>
+  </div>
+  <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+  <div class="poke-row">
+    <span class="poke-chip"><span class="poke-dot" style="background:#a8a878"></span>カビゴン <span class="shiny-badge">✨色違い</span></span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#a8a878"></span>ガルーラ</span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#a8a878"></span>ケッキング</span>
+  </div>
+  <hr class="grunt-divider">
+  <div class="grunt-section-label">✅ おすすめ攻撃構成</div>
+  <div class="counter-row">
+    <span class="counter-chip">ルカリオ</span>
+    <span class="counter-chip">ケルディオ</span>
+    <span class="counter-chip">ローブシン</span>
+  </div>
+</div>
+
+<!-- あく -->
+<div class="grunt-card">
+  <div class="grunt-type-header">
+    <span class="grunt-type-badge" style="background:rgba(112,88,72,.15);color:#705848;border:1px solid rgba(112,88,72,.5)">
+      🌑 あく
+    </span>
+    <span class="grunt-shield">シールド 0枚</span>
+  </div>
+  <div class="grunt-section-label">🎯 出てくるポケモン（入手可能）</div>
+  <div class="poke-row">
+    <span class="poke-chip"><span class="poke-dot" style="background:#705848"></span>ニューラ <span class="shiny-badge">✨色違い</span></span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#705848"></span>マニューラ</span>
+    <span class="poke-chip"><span class="poke-dot" style="background:#705848"></span>ヘルガー</span>
+  </div>
+  <hr class="grunt-divider">
+  <div class="grunt-section-label">✅ おすすめ攻撃構成</div>
+  <div class="counter-row">
+    <span class="counter-chip">ルカリオ</span>
+    <span class="counter-chip">バンギラス</span>
+    <span class="counter-chip">ゲンガー</span>
+  </div>
+</div>
+
+</body>
+</html>
