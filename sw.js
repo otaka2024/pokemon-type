@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pokemon-type-v2';
+const CACHE_NAME = 'pokemon-type-v3';
 const ASSETS = [
   './index.html',
   './manifest.json',

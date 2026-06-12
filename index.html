@@ -19,68 +19,98 @@ window.addEventListener('beforeinstallprompt', function(e) {
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f0f1a;
-    --card: #1a1a2e;
-    --border: #2a2a4a;
-    --text: #e8e8f0;
-    --sub: #8888aa;
-    --great: #22dd88;
+    --bg: #0b0e1a;
+    --bg-2: #11152a;
+    --card: #161b33;
+    --card-2: #1b2140;
+    --border: #262d52;
+    --text: #e8eaf6;
+    --sub: #8b93b8;
+    --faint: #5a6188;
+    --accent: #f8d800;
+    --accent-glow: rgba(248,216,0,.35);
+    --great: #2dd4a0;
     --good: #88dd22;
     --neutral: #888899;
-    --bad: #dd6622;
-    --immune: #443355;
+    --bad: #ff8a4c;
+    --immune: #a98fd6;
+    --rocket: #ff5d73;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   body {
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    background: var(--bg);
+    background: radial-gradient(900px 480px at 80% -10%, #1c2350 0%, var(--bg) 55%);
     color: var(--text);
     min-height: 100vh;
-    padding: 12px 12px 80px;
+    padding: 0 14px calc(86px + env(safe-area-inset-bottom, 0));
     max-width: 600px;
     margin: 0 auto;
   }
 
+  /* ─── App bar ─── */
+  .app-bar {
+    margin: 0 -14px 16px;
+    padding: 14px 18px 12px;
+    background: rgba(17, 21, 42, .6);
+    border-bottom: 1px solid var(--border);
+  }
+  .app-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
   h1 {
-    text-align: center;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 900;
-    letter-spacing: .05em;
-    margin-bottom: 4px;
+    letter-spacing: .04em;
     background: linear-gradient(90deg, #f8d800, #ff6b35, #ff0080);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
-  .subtitle {
-    text-align: center;
-    font-size: .75rem;
-    color: var(--sub);
-    margin-bottom: 20px;
-    position: relative;
+  .ver-badge { font-size: .6rem; color: var(--faint); }
+  .app-sub-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
   }
-  .ver-badge {
-    position: absolute;
-    right: 0; top: 0;
-    font-size: .6rem;
+  .subtitle { font-size: .72rem; color: var(--sub); margin-right: auto; }
+  .chip-btn {
+    font-size: .65rem;
+    font-family: inherit;
+    font-weight: 700;
     color: var(--sub);
-    opacity: .5;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    min-height: 28px;
+  }
+  .chip-btn:active { background: var(--card-2); }
+  .chip-btn.install {
+    color: #fff;
+    background: var(--rocket);
+    border-color: transparent;
   }
 
   /* ─── Bottom nav ─── */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background: rgba(15,15,26,.96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(11, 14, 26, .92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid var(--border);
     display: flex;
     z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0));
+    gap: 6px;
   }
   .nav-btn {
     flex: 1;
@@ -88,48 +118,54 @@ window.addEventListener('beforeinstallprompt', function(e) {
     flex-direction: column;
     align-items: center;
     gap: 3px;
-    padding: 10px 4px 8px;
+    padding: 8px 4px 7px;
     background: transparent;
     border: none;
+    border-radius: 14px;
     color: var(--sub);
     font-family: inherit;
-    font-size: .6rem;
+    font-size: .62rem;
     font-weight: 700;
     cursor: pointer;
-    transition: color .2s;
+    transition: all .2s;
     min-height: 56px;
   }
-  .nav-btn .nav-icon { font-size: 1.3rem; line-height: 1; }
-  .nav-btn.active { color: #f8d800; }
-  .nav-btn.active .nav-icon { filter: drop-shadow(0 0 6px rgba(248,216,0,.5)); }
+  .nav-btn .nav-icon { font-size: 1.35rem; line-height: 1; }
+  .nav-btn.active {
+    color: var(--accent);
+    background: rgba(248, 216, 0, .1);
+  }
+  .nav-btn.active .nav-icon { filter: drop-shadow(0 0 8px var(--accent-glow)); }
 
   /* ─── Mode pill ─── */
   .mode-pill {
     display: flex;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 3px;
+    border-radius: 14px;
+    padding: 4px;
     margin-bottom: 16px;
-    gap: 3px;
+    gap: 4px;
   }
   .mode-btn {
     flex: 1;
-    padding: 9px 4px;
-    border-radius: 9px;
+    padding: 11px 4px;
+    border-radius: 10px;
     border: none;
     background: transparent;
     color: var(--sub);
     font-family: inherit;
-    font-size: .78rem;
+    font-size: .8rem;
     font-weight: 700;
     cursor: pointer;
     transition: all .2s;
     text-align: center;
+    min-height: 44px;
   }
   .mode-btn.active {
-    background: rgba(248,216,0,.15);
-    color: #f8d800;
+    background: rgba(248, 216, 0, .14);
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px rgba(248, 216, 0, .35);
   }
 
   /* ─── Type grid selector ─── */
@@ -145,42 +181,43 @@ window.addEventListener('beforeinstallprompt', function(e) {
   .type-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 5px;
+    gap: 6px;
     margin-bottom: 16px;
   }
 
   .type-btn {
-    padding: 7px 4px 6px;
-    border-radius: 12px;
-    border: 2px solid transparent;
+    padding: 7px 2px 6px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
     font-family: inherit;
     font-size: .6rem;
     font-weight: 700;
     cursor: pointer;
     transition: all .15s;
-    opacity: .8;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 3px;
     width: 100%;
-    min-height: 56px;
+    min-height: 60px;
     justify-content: center;
   }
   .type-btn.selected {
-    opacity: 1;
-    border-color: white;
+    border-color: var(--accent);
     transform: scale(1.06);
-    box-shadow: 0 0 10px rgba(255,255,255,.3);
+    box-shadow: 0 0 14px var(--accent-glow);
   }
   .type-btn[class*="c-"] {
-    background: rgba(255,255,255,0.08) !important;
-    color: white !important;
+    background: var(--card) !important;
+    color: var(--text) !important;
+  }
+  .type-btn.selected[class*="c-"] {
+    background: var(--card-2) !important;
   }
   .type-btn img {
-    width: 48px; height: 48px;
+    width: 44px; height: 44px;
     flex-shrink: 0;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.5));
     border-radius: 50%;
   }
   .result-type-chip img {
@@ -199,36 +236,34 @@ window.addEventListener('beforeinstallprompt', function(e) {
   .results {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
+    border-radius: 18px;
+    padding: 18px 16px;
   }
 
   .result-title {
-    font-size: .85rem;
+    font-size: .9rem;
     font-weight: 900;
     margin-bottom: 14px;
     color: var(--text);
   }
 
-  .result-group {
-    margin-bottom: 14px;
-  }
+  .result-group { margin-bottom: 14px; }
 
   .result-group-label {
     font-size: .68rem;
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    margin-bottom: 7px;
-    padding: 3px 10px;
-    border-radius: 6px;
+    margin-bottom: 8px;
+    padding: 4px 11px;
+    border-radius: 8px;
     display: inline-block;
   }
 
-  .label-great  { background: rgba(34,221,136,.15); color: var(--great); }
-  .label-good   { background: rgba(136,221,34,.15);  color: var(--good); }
-  .label-bad    { background: rgba(221,102,34,.15);  color: var(--bad); }
-  .label-immune { background: rgba(68,51,85,.5);     color: #aa88cc; }
+  .label-great  { background: rgba(45,212,160,.13); color: var(--great); border: 1px solid rgba(45,212,160,.35); }
+  .label-good   { background: rgba(136,221,34,.13); color: var(--good); border: 1px solid rgba(136,221,34,.3); }
+  .label-bad    { background: rgba(255,138,76,.13); color: var(--bad); border: 1px solid rgba(255,138,76,.3); }
+  .label-immune { background: rgba(169,143,214,.12); color: var(--immune); border: 1px solid rgba(169,143,214,.3); }
 
   .result-types {
     display: flex;
@@ -237,14 +272,14 @@ window.addEventListener('beforeinstallprompt', function(e) {
   }
 
   .result-type-chip {
-    padding: 4px 9px 4px 6px;
-    border-radius: 10px;
-    font-size: .75rem;
+    padding: 5px 10px 5px 6px;
+    border-radius: 11px;
+    font-size: .78rem;
     font-weight: 700;
   }
 
   .no-result {
-    color: var(--sub);
+    color: var(--faint);
     font-size: .82rem;
     font-style: italic;
   }
@@ -253,6 +288,10 @@ window.addEventListener('beforeinstallprompt', function(e) {
   .chart-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 10px;
   }
 
   .chart-hint {
@@ -275,17 +314,14 @@ window.addEventListener('beforeinstallprompt', function(e) {
     vertical-align: middle;
   }
 
-  th {
-    font-weight: 700;
-    color: var(--sub);
-  }
+  th { font-weight: 700; color: var(--sub); }
 
   .corner { width: 60px; text-align: right; padding-right: 4px; font-size: .6rem; color: var(--sub); }
 
-  td.eff-2  { background: #22dd88; color: #000; font-weight: 900; }
-  td.eff-05 { background: #dd6622; color: #fff; font-weight: 700; }
-  td.eff-0  { background: #221133; color: #aa88cc; font-weight: 700; }
-  td.eff-1  { background: #1e1e30; color: #444466; }
+  td.eff-2  { background: #2dd4a0; color: #06251b; font-weight: 900; border-radius: 4px; }
+  td.eff-05 { background: #c75a2a; color: #fff; font-weight: 700; border-radius: 4px; }
+  td.eff-0  { background: #251a3d; color: #a98fd6; font-weight: 700; border-radius: 4px; }
+  td.eff-1  { background: var(--bg-2); color: #3a3f63; }
 
   .atk-label {
     writing-mode: horizontal-tb;
@@ -298,7 +334,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
     display: flex;
     gap: 14px;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 12px;
     flex-wrap: wrap;
   }
   .legend-item {
@@ -309,7 +345,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
     color: var(--sub);
   }
   .legend-dot {
-    width: 14px; height: 14px; border-radius: 3px;
+    width: 14px; height: 14px; border-radius: 4px;
     font-size: .6rem; font-weight: 900;
     display: flex; align-items: center; justify-content: center;
   }
@@ -344,9 +380,13 @@ window.addEventListener('beforeinstallprompt', function(e) {
     color: var(--sub);
     text-align: center;
     margin-bottom: 16px;
-    line-height: 1.5;
+    line-height: 1.6;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
   }
-  .rocket-header strong { color: #ff4444; }
+  .rocket-header strong { color: var(--rocket); }
 
   .leader-tabs {
     display: grid;
@@ -355,9 +395,9 @@ window.addEventListener('beforeinstallprompt', function(e) {
     margin-bottom: 14px;
   }
   .leader-tab {
-    padding: 10px 4px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
+    padding: 11px 4px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
     background: var(--card);
     color: var(--sub);
     font-family: inherit;
@@ -366,9 +406,14 @@ window.addEventListener('beforeinstallprompt', function(e) {
     cursor: pointer;
     transition: all .2s;
     text-align: center;
-    min-height: 44px;
+    min-height: 46px;
   }
-  .leader-tab.active { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,.08); }
+  .leader-tab.active {
+    border-color: var(--rocket);
+    color: var(--rocket);
+    background: rgba(255,93,115,.1);
+    box-shadow: 0 0 12px rgba(255,93,115,.18);
+  }
 
   .leader-panel { display: none; }
   .leader-panel.active { display: block; }
@@ -376,8 +421,8 @@ window.addEventListener('beforeinstallprompt', function(e) {
   .pokemon-slot {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 12px 14px;
+    border-radius: 16px;
+    padding: 14px;
     margin-bottom: 10px;
   }
   .slot-header {
@@ -388,7 +433,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
     color: var(--sub);
     margin-bottom: 8px;
   }
-  .slot-header span { color: #ff8844; }
+  .slot-header span { color: var(--bad); }
 
   .pokemon-row {
     display: flex;
@@ -398,22 +443,23 @@ window.addEventListener('beforeinstallprompt', function(e) {
     align-items: center;
   }
   .poke-chip {
-    padding: 4px 10px 4px 8px;
-    border-radius: 10px;
+    padding: 5px 11px 5px 9px;
+    border-radius: 11px;
     font-size: .78rem;
     font-weight: 700;
-    background: var(--border);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     color: var(--text);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
   }
   .poke-type-dot {
     width: 8px; height: 8px; border-radius: 50%;
     display: inline-block;
     flex-shrink: 0;
   }
-  .poke-sep { color: var(--sub); font-size: .7rem; }
+  .poke-sep { color: var(--faint); font-size: .7rem; }
 
   .counter-row {
     display: flex;
@@ -430,18 +476,18 @@ window.addEventListener('beforeinstallprompt', function(e) {
     margin-bottom: 2px;
   }
   .counter-chip {
-    padding: 3px 9px;
-    border-radius: 8px;
+    padding: 4px 10px;
+    border-radius: 9px;
     font-size: .73rem;
     font-weight: 700;
-    background: rgba(34,221,136,.15);
+    background: rgba(45,212,160,.12);
     color: var(--great);
-    border: 1px solid rgba(34,221,136,.3);
+    border: 1px solid rgba(45,212,160,.3);
   }
 
   .update-note {
     font-size: .65rem;
-    color: var(--sub);
+    color: var(--faint);
     text-align: center;
     margin-top: 14px;
     font-style: italic;
@@ -455,19 +501,25 @@ window.addEventListener('beforeinstallprompt', function(e) {
     margin-bottom: 16px;
   }
   .section-tab {
-    padding: 11px 8px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
+    padding: 12px 8px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
     background: var(--card);
     color: var(--sub);
     font-family: inherit;
-    font-size: .78rem;
+    font-size: .8rem;
     font-weight: 700;
     cursor: pointer;
     text-align: center;
     transition: all .2s;
+    min-height: 46px;
   }
-  .section-tab.active { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,.08); }
+  .section-tab.active {
+    border-color: var(--rocket);
+    color: var(--rocket);
+    background: rgba(255,93,115,.1);
+    box-shadow: 0 0 12px rgba(255,93,115,.18);
+  }
 
   .section-panel { display: none; }
   .section-panel.active { display: block; }
@@ -476,7 +528,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
   .grunt-card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 16px;
     padding: 14px;
     margin-bottom: 10px;
     scroll-margin-top: 62px;
@@ -491,7 +543,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 4px 12px;
+    padding: 5px 13px;
     border-radius: 20px;
     font-size: .78rem;
     font-weight: 900;
@@ -501,9 +553,10 @@ window.addEventListener('beforeinstallprompt', function(e) {
     margin-left: auto;
     font-size: .63rem;
     color: var(--sub);
-    background: var(--border);
-    padding: 3px 8px;
-    border-radius: 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 4px 9px;
+    border-radius: 9px;
   }
   .grunt-section-label {
     font-size: .62rem;
@@ -522,8 +575,8 @@ window.addEventListener('beforeinstallprompt', function(e) {
   }
   .shiny-badge {
     font-size: .6rem;
-    color: #f8d800;
-    background: rgba(248,216,0,.15);
+    color: var(--accent);
+    background: rgba(248,216,0,.14);
     border-radius: 5px;
     padding: 1px 4px;
     margin-left: 2px;
@@ -560,7 +613,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
   .gqn-chip {
     display: inline-flex;
     align-items: center;
-    padding: 7px 13px;
+    padding: 8px 14px;
     border-radius: 20px;
     font-size: .78rem;
     font-weight: 900;
@@ -569,24 +622,25 @@ window.addEventListener('beforeinstallprompt', function(e) {
     letter-spacing: .02em;
     cursor: pointer;
     transition: opacity .15s;
-    min-height: 36px;
+    min-height: 38px;
   }
   .gqn-chip:active { opacity: .65; }
 
   /* 強力タイプ 専用スタイル */
   .grunt-card.strong-type {
-    border-color: rgba(255,68,68,.4);
-    background: rgba(255,68,68,.04);
+    border-color: rgba(255,93,115,.45);
+    background: rgba(255,93,115,.05);
+    box-shadow: 0 0 16px rgba(255,93,115,.08);
   }
   .grunt-card.strong-type .grunt-type-badge {
-    background: rgba(255,68,68,.15);
-    color: #ff6666;
-    border: 1px solid rgba(255,68,68,.5);
+    background: rgba(255,93,115,.14);
+    color: var(--rocket);
+    border: 1px solid rgba(255,93,115,.5);
   }
   .grunt-card.strong-type .grunt-shield {
-    background: rgba(255,68,68,.15);
-    color: #ff8888;
-    border: 1px solid rgba(255,68,68,.3);
+    background: rgba(255,93,115,.14);
+    color: #ff93a3;
+    border: 1px solid rgba(255,93,115,.3);
   }
 
   /* 情報源リンク */
@@ -606,12 +660,17 @@ window.addEventListener('beforeinstallprompt', function(e) {
 </head>
 <body>
 
-<h1>⚔️ タイプ相性チェッカー</h1>
-<p class="subtitle">ポケモンGO 全18タイプ対応<span class="ver-badge" id="ver-badge"></span></p>
-<p style="text-align:center;margin-top:-12px;margin-bottom:8px">
-  <button id="update-btn" onclick="checkForUpdate()" style="font-size:10px;color:var(--sub);background:transparent;border:1px solid var(--border);border-radius:5px;padding:2px 8px;cursor:pointer;font-family:inherit">🔄 更新確認</button>
-  <button id="install-btn" onclick="installApp()" style="display:none;font-size:10px;color:#fff;background:#e85d5d;border:none;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:inherit;margin-left:6px">📲 インストール</button>
-</p>
+<header class="app-bar">
+  <div class="app-title-row">
+    <h1>⚔️ タイプ相性チェッカー</h1>
+    <span class="ver-badge" id="ver-badge"></span>
+  </div>
+  <div class="app-sub-row">
+    <span class="subtitle">ポケモンGO 全18タイプ対応</span>
+    <button id="update-btn" class="chip-btn" onclick="checkForUpdate()">🔄 更新確認</button>
+    <button id="install-btn" class="chip-btn install" style="display:none" onclick="installApp()">📲 インストール</button>
+  </div>
+</header>
 
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-checker" onclick="switchView('checker')">
@@ -1358,7 +1417,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
 </div>
 
 <script>
-const APP_VER = '1.0.7';
+const APP_VER = '1.1.0';
 document.getElementById('ver-badge').textContent = 'v' + APP_VER;
 
 const TYPE_ICON_MAP = {
